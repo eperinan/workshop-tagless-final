@@ -13,7 +13,6 @@ lazy val app = project
 
 lazy val `workshop-tagless-final` = project
   .in(file("."))
-  .enablePlugins(ScalaUnidocPlugin)
   .aggregate(app, common)
 
 
