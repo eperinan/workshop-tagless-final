@@ -10,6 +10,8 @@ object ProjectPlugin extends AutoPlugin {
     lazy val V = new {
       val catsCore     = "1.1.0"
       val catsEffect   = "0.10.1"
+      val circe        = "0.9.3"
+      val http4s       = "0.18.13"
       val log4cats     = "0.0.7"
       val mockitoAll   = "1.10.19"
       val scalaCheck   = "1.14.0"
@@ -49,6 +51,15 @@ object ProjectPlugin extends AutoPlugin {
       )
     )
 
-    lazy val appSettings: Seq[Def.Setting[_]] = Seq()
+    lazy val appSettings: Seq[Def.Setting[_]] = Seq(
+      libraryDependencies ++= Seq(
+        "org.http4s" %% "http4s-dsl"          % V.http4s,
+        "org.http4s" %% "http4s-blaze-server" % V.http4s,
+        "org.http4s" %% "http4s-blaze-client" % V.http4s,
+        "org.http4s" %% "http4s-circe"        % V.http4s,
+        "io.circe"   %% "circe-generic"       % V.circe,
+        "io.circe"   %% "circe-literal"       % V.circe
+      )
+    )
   }
 }
