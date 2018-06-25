@@ -9,7 +9,7 @@ trait Program[F[_]] {
   val logger: Logger[F]
   val forniteAPI: ForniteAPI[F]
 
-  def start(): F[Unit]
+  def start(player: Player): F[Unit]
 
 }
 

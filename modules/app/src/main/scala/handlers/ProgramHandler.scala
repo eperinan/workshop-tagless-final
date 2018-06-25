@@ -26,11 +26,8 @@ class ProgramHandler[F[_]: Sync](
   override val logger: Logger[F]         = log
   override val forniteAPI: ForniteAPI[F] = fapi
 
-  override def start(): F[Unit] =
+  override def start(player: Player): F[Unit] =
     for {
-      //player <- Player("eperinan", "psn").pure[F]
-      //player <- Player("\\/-()", "psn").pure[F]
-      player <- Player("maaaikoool", "psn").pure[F]
       stats <- ME.handleErrorWith[ResultStatsPlayer](
         forniteAPI.fetchStats(player).map(_.asRight[ErrorStatsPlayer]))(
         e => ErrorStatsPlayer(e, player).asLeft[StatsPlayer].pure[F]
@@ -55,8 +52,7 @@ class ForniteAPIHandler[F[_]: Sync](
         s"https://api.fortnitetracker.com/v1/profile/${player.platformName}/${player.epicUserHandle}"))
       request <- Request[F](
         method = Method.GET,
-        //headers = Headers(List(Header("Wrong Header", "152433486-fc09-4907-a833-02d087928161"))),
-        headers = Headers(List(Header("TRN-Api-Key", "152433486-fc09-4907-a833-02d087928161"))),
+        headers = Headers(List(Header("TRN-Api-Key", "52433486-fc09-4907-a833-02d087928161"))),
         uri = uri
       ).pure[F]
       stats <- client.fetch[StatsPlayer](request)(response => response.as[StatsPlayer])
