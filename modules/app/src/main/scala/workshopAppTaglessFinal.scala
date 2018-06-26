@@ -7,5 +7,8 @@ object workshopAppTaglessFinal extends App {
   val playerNotFound   = Player("eperinan", "psn")
   val playerWrongParse = Player("\\/-()", "psn")
   val playerOk         = Player("maaaikoool", "psn")
-  programInterpreterIO.start(playerOk).unsafeRunSync()
+
+  val result = programInterpreterIO.start(playerOk).unsafeRunSync()
+
+  println(result)
 }

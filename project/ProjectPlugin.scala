@@ -13,7 +13,6 @@ object ProjectPlugin extends AutoPlugin {
       val circe        = "0.9.3"
       val http4s       = "0.18.13"
       val log4cats     = "0.0.7"
-      val mockitoAll   = "1.10.19"
       val scalaCheck   = "1.14.0"
       val scalatest    = "3.0.5"
       val slf4jVersion = "1.7.25"
@@ -46,8 +45,7 @@ object ProjectPlugin extends AutoPlugin {
         "org.typelevel"     %% "cats-core"      % V.catsCore,
         "org.typelevel"     %% "cats-effect"    % V.catsEffect,
         "org.scalatest"     %% "scalatest"      % V.scalatest % Test,
-        "org.scalacheck"    %% "scalacheck"     % V.scalaCheck % Test,
-        "org.mockito"       % "mockito-all"     % V.mockitoAll % Test
+        "org.scalacheck"    %% "scalacheck"     % V.scalaCheck % Test
       )
     )
 
