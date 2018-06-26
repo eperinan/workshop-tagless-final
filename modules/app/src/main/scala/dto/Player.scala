@@ -5,11 +5,11 @@ object Player {
 
   type ResultStatsPlayer = Either[ErrorStatsPlayer, StatsPlayer]
 
-  case class ErrorStatsPlayer(throwable: Throwable, player: Player)
+  final case class ErrorStatsPlayer(throwable: Throwable, player: Player)
 
-  case class Player(epicUserHandle: String, platformName: String)
+  final case class Player(epicUserHandle: String, platformName: String)
 
-  case class StatsValue(
+  final case class StatsValue(
       label: String,
       field: String,
       category: String,
@@ -19,11 +19,11 @@ object Player {
       percentile: Float,
       displayValue: String)
 
-  case class StatsP(score: StatsValue, top1: StatsValue)
+  final case class StatsP(score: StatsValue, top1: StatsValue)
 
-  case class Stats(p2: StatsP)
+  final case class Stats(p2: StatsP)
 
-  case class StatsPlayer(
+  final case class StatsPlayer(
       message: Option[String],
       error: Option[String],
       accountId: String,
