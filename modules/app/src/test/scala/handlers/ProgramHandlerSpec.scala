@@ -3,7 +3,11 @@ package handlers
 
 import cats.effect.{IO, Sync}
 import cats.syntax.applicative._
-import com.eperinan.workshop.taglessfinal.app.dto.Player.{Player, ResultStatsPlayer}
+import com.eperinan.workshop.taglessfinal.app.dto.Player.{
+  FetchStatsError,
+  Player,
+  ResultStatsPlayer
+}
 import com.eperinan.workshop.taglessfinal.common.handlers.LoggerHandler
 import com.eperinan.workshop.taglessfinal.app.handlers.Common._
 import io.chrisdavenport.log4cats.SelfAwareStructuredLogger
@@ -26,16 +30,20 @@ class ProgramHandlerSpec extends FunSuite with Matchers with Checkers {
       implicit val _ = new ForniteAPIHandler[IO] {
         override def fetchStats(player: Player): IO[ResultStatsPlayer] = resultStatsOk.pure[IO]
         override def displayStats(stats: ResultStatsPlayer): IO[String] =
-          stats.fold(err => err.throwable.getMessage, stats => stats.stats.p2.score.field).pure[IO]
+          stats
+            .fold(_ match {
+              case FetchStatsError(t, _) => t.getMessage
+            }, stats => stats.stats.p2.score.field)
+            .pure[IO]
       }
 
       val programHandler = new ProgramHandler[IO]
 
       val result: String = programHandler.start(playerOk).unsafeRunSync()
 
-      result == resultStatsOk.fold(
-        err => err.throwable.getMessage,
-        stats => stats.stats.p2.score.field)
+      result == resultStatsOk.fold(_ match {
+        case FetchStatsError(t, _) => t.getMessage
+      }, stats => stats.stats.p2.score.field)
     }
 
   }
@@ -47,16 +55,20 @@ class ProgramHandlerSpec extends FunSuite with Matchers with Checkers {
       implicit val _ = new ForniteAPIHandler[IO] {
         override def fetchStats(player: Player): IO[ResultStatsPlayer] = resultStatsKO.pure[IO]
         override def displayStats(stats: ResultStatsPlayer): IO[String] =
-          stats.fold(err => err.throwable.getMessage, stats => stats.stats.p2.score.field).pure[IO]
+          stats
+            .fold(_ match {
+              case FetchStatsError(t, _) => t.getMessage
+            }, stats => stats.stats.p2.score.field)
+            .pure[IO]
       }
 
       val programHandler = new ProgramHandler[IO]
 
       val result: String = programHandler.start(playerWrongParse).unsafeRunSync()
 
-      result == resultStatsKO.fold(
-        err => err.throwable.getMessage,
-        stats => stats.stats.p2.score.field)
+      result == resultStatsKO.fold(_ match {
+        case FetchStatsError(t, _) => t.getMessage
+      }, stats => stats.stats.p2.score.field)
     }
 
   }

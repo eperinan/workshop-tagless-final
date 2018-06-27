@@ -19,7 +19,7 @@ import org.http4s.circe.jsonOf
 
 import org.http4s.client.Client
 
-class ForniteAPIHandler[F[_]: Sync](
+class ForniteAPIHandler[F[+ _]: Sync](
     implicit ME: MonadError[F, Throwable],
     log: LoggerHandler[F],
     client: Client[F])
@@ -43,14 +43,16 @@ class ForniteAPIHandler[F[_]: Sync](
         stats <- client.fetch[StatsPlayer](request)(response => response.as[StatsPlayer])
       } yield stats).map[ResultStatsPlayer](_.asRight[ErrorStatsPlayer])
     }(
-      e => ErrorStatsPlayer(e, player).asLeft[StatsPlayer].pure[F]
+      e => FetchStatsError(e, player).asLeft[StatsPlayer].pure[F]
     )
 
   override def displayStats(stats: ResultStatsPlayer): F[String] =
     stats
       .fold[String](
-        err =>
-          s"Something was wrong for the player ${err.player.epicUserHandle} and I can't display the information. The error was ${err.throwable.getMessage}",
+        _ match {
+          case FetchStatsError(t, player) =>
+            s"Something was wrong for the player ${player.epicUserHandle} and I can't display the information. The error was ${t.getMessage}"
+        },
         sp =>
           s"Player: ${sp.epicUserHandle} [${sp.platformName}] - Score ${sp.stats.p2.score.category} ${sp.stats.p2.score.displayValue} - ${sp.stats.p2.top1.label} ${sp.stats.p2.top1.field} ${sp.stats.p2.top1.displayValue}"
       )

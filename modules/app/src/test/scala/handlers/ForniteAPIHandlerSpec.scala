@@ -23,7 +23,9 @@ class ForniteAPIHandlerSpec extends FunSuite with Matchers with Checkers {
 
     check {
       val result: ResultStatsPlayer = forniteApiHandler.fetchStats(playerWrongParse).unsafeRunSync()
-      result.isLeft && result.fold[Boolean](err => err.player == playerWrongParse, _ => false)
+      result.isLeft && result.fold[Boolean](_ match {
+        case FetchStatsError(_, player) => player == playerWrongParse
+      }, _ => false)
     }
 
   }
@@ -32,7 +34,9 @@ class ForniteAPIHandlerSpec extends FunSuite with Matchers with Checkers {
 
     check {
       val result: ResultStatsPlayer = forniteApiHandler.fetchStats(playerNotFound).unsafeRunSync()
-      result.isLeft && result.fold[Boolean](err => err.player == playerNotFound, _ => false)
+      result.isLeft && result.fold[Boolean](_ match {
+        case FetchStatsError(_, player) => player == playerNotFound
+      }, _ => false)
     }
   }
 

@@ -9,7 +9,7 @@ object Common {
   val playerWrongParse: Player = Player("\\/-()", "psn")
   val playerOk: Player         = Player("maaaikoool", "psn")
 
-  val statsKO: ErrorStatsPlayer = ErrorStatsPlayer(new Throwable("Wrong parsing"), playerWrongParse)
+  val statsKO: FetchStatsError = FetchStatsError(new Throwable("Wrong parsing"), playerWrongParse)
   val statsOk: StatsPlayer = StatsPlayer(
     None,
     None,

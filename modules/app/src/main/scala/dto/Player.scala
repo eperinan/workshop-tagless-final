@@ -5,7 +5,8 @@ object Player {
 
   type ResultStatsPlayer = Either[ErrorStatsPlayer, StatsPlayer]
 
-  final case class ErrorStatsPlayer(throwable: Throwable, player: Player)
+  sealed trait ErrorStatsPlayer                                          extends Product with Serializable
+  final case class FetchStatsError(throwable: Throwable, player: Player) extends ErrorStatsPlayer
 
   final case class Player(epicUserHandle: String, platformName: String)
 
